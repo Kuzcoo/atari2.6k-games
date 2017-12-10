@@ -4,49 +4,49 @@ var cancelFrameId = null;
 var stateHandlers = {};
 
 const addState = (stateName, stateObject) => {
-	stateHandlers[stateName] = stateObject;
+  stateHandlers[stateName] = stateObject;
 };
 
 const setState = (stateName) => {
-	gameState = stateName;
+  gameState = stateName;
 };
 
 const gameLoop = () => {
-	update();
-	draw();
+  update();
+  draw();
 
-	cancelFrameId = requestAnimationFrame(gameLoop);
+  cancelFrameId = requestAnimationFrame(gameLoop);
 }
 
 const handleInputs = () => {
-	stateHandlers[gameState].handleInputs();
+  stateHandlers[gameState].handleInputs();
 };
 
 const update = () => {
-	stateHandlers[gameState].update();
+  stateHandlers[gameState].update();
 };
 
 const draw = () => {
-	stateHandlers[gameState].draw();
+  stateHandlers[gameState].draw();
 };
 
 const start = () => {
-	if (cancelFrameId) {
-		cancelAnimationFrame(cancelFrameId);
-	}
+  if (cancelFrameId) {
+    cancelAnimationFrame(cancelFrameId);
+  }
 
-	gameLoop();
+  gameLoop();
 };
 
 const Game = function () {
-	return {
-		addState,
-		setState,
-		handleInputs,
-		update,
-		draw,
-		start
-	};	
+  return {
+    addState,
+    setState,
+    handleInputs,
+    update,
+    draw,
+    start
+  };
 }();
 
 export default Game;
