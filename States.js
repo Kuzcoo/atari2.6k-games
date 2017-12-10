@@ -1,27 +1,27 @@
 import {
-	canvas,
-	ctx,
-	canvasWidth,
-	canvasHeight,
-	fieldSize,
-	fieldPosX,
-	fieldPosY,
-	winningScore,
-	framesTilNextRound
+  canvas,
+  ctx,
+  canvasWidth,
+  canvasHeight,
+  fieldSize,
+  fieldPosX,
+  fieldPosY,
+  winningScore,
+  framesTilNextRound
 } from './Settings';
 
 
 import {
-	addPointTo, 
-	displayScores, 
-	displayWinner,
-	displayRestart,
-	displayStart
+  addPointTo, 
+  displayScores, 
+  displayWinner,
+  displayRestart,
+  displayStart
 } from './Score';
 
 import {
-	drawNet,
-	drawBackground
+  drawNet,
+  drawBackground
 } from './Utils';
 
 import {isPressedAny} from './Keyboarder';
@@ -40,9 +40,9 @@ const padOne = new Pad(ctx, fieldPosX+16, fieldPosY);
 const padTwo = new Pad(ctx, fieldPosX+fieldSize-32, fieldPosY);
 
 const ball = new Ball(
-	ctx,
-	canvasWidth/2 - 4,
-	canvasHeight/2 - 4, 8
+  ctx,
+  canvasWidth/2 - 4,
+  canvasHeight/2 - 4, 8
 );
 
 padOne.setKey('UP', 'A');
@@ -59,136 +59,136 @@ const GAME_OVER = 'GAME_OVER';
 
 Game.addState(
 
-	GAME_START,
+  GAME_START,
 
-	{
-		'handleInputs': () => {
-			if (isPressedAny()) {
-				Game.setState(GAME_PLAY);
-			}
-		},
+  {
+    'handleInputs': () => {
+      if (isPressedAny()) {
+        Game.setState(GAME_PLAY);
+      }
+    },
 
-		'update': () => {
-			Game.handleInputs();
-		},
+    'update': () => {
+      Game.handleInputs();
+    },
 
-		'draw': () => {
-			drawBackground();
-			padOne.draw();
-			padTwo.draw();
-			displayScores(ctx, playerOne, playerTwo);
-			displayStart(ctx);
-		}
-	}
+    'draw': () => {
+      drawBackground();
+      padOne.draw();
+      padTwo.draw();
+      displayScores(ctx, playerOne, playerTwo);
+      displayStart(ctx);
+    }
+  }
 );
 
 Game.addState(
 
-	GAME_PLAY, 
+  GAME_PLAY, 
 
-	{
-		'update': () => {
-			padOne.update();
-			padTwo.update();
-			ball.update();
+  {
+    'update': () => {
+      padOne.update();
+      padTwo.update();
+      ball.update();
 
-			if (ball.collideWithRightWall()) {
-				playerOne = addPointTo(playerOne);
-				Game.setState(GAME_END_ROUND);
-			}
+      if (ball.collideWithRightWall()) {
+        playerOne = addPointTo(playerOne);
+        Game.setState(GAME_END_ROUND);
+      }
 
-			if (ball.collideWithLeftWall()) {
-				playerTwo = addPointTo(playerTwo);
-				Game.setState(GAME_END_ROUND);
-			}
+      if (ball.collideWithLeftWall()) {
+        playerTwo = addPointTo(playerTwo);
+        Game.setState(GAME_END_ROUND);
+      }
 
-			if (ball.collideWith(padOne) ||
-					ball.collideWith(padTwo)) {
-				ball.changeDirection();
-			}
-		},
-		'draw': () => {
-			drawBackground();
-			drawNet();
-			padOne.draw();
-			padTwo.draw();
-			ball.draw();
-			displayScores(ctx, playerOne, playerTwo);
-		}
+      if (ball.collideWith(padOne) ||
+          ball.collideWith(padTwo)) {
+        ball.changeDirection();
+      }
+    },
+    'draw': () => {
+      drawBackground();
+      drawNet();
+      padOne.draw();
+      padTwo.draw();
+      ball.draw();
+      displayScores(ctx, playerOne, playerTwo);
+    }
 });
 
 Game.addState(
 
-	GAME_END_ROUND,
+  GAME_END_ROUND,
 
-	{
-		'update': () => {
-			padOne.update();
-			padTwo.update();
+  {
+    'update': () => {
+      padOne.update();
+      padTwo.update();
 
-			framesElapsedSinceEndRound++;
+      framesElapsedSinceEndRound++;
 
-			if (playerOne === winningScore ||
-					playerTwo === winningScore) {
-				winnerName = playerOne === winningScore ? 
-												'Player ONE' :
-												'Player TWO';
+      if (playerOne === winningScore ||
+          playerTwo === winningScore) {
+        winnerName = playerOne === winningScore ? 
+                        'Player ONE' :
+                        'Player TWO';
 
-				return Game.setState(GAME_OVER);
-			}
+        return Game.setState(GAME_OVER);
+      }
 
-			if (framesElapsedSinceEndRound === framesTilNextRound) {
-				framesElapsedSinceEndRound = 0;
-				ball.reset();
-				Game.setState(GAME_PLAY);
-				Game.start();
-			}
-		},
+      if (framesElapsedSinceEndRound === framesTilNextRound) {
+        framesElapsedSinceEndRound = 0;
+        ball.reset();
+        Game.setState(GAME_PLAY);
+        Game.start();
+      }
+    },
 
-		'draw': () => {
-			drawBackground();
-			drawNet();
-			padOne.draw();
-			padTwo.draw();
-			displayScores(ctx, playerOne, playerTwo);
-		}
-	}
+    'draw': () => {
+      drawBackground();
+      drawNet();
+      padOne.draw();
+      padTwo.draw();
+      displayScores(ctx, playerOne, playerTwo);
+    }
+  }
 );
 
 Game.addState(
 
-	GAME_OVER,
+  GAME_OVER,
 
-	{
-		'handleInputs': () => {
-			if (isPressedAny()) {
-				ball.reset();
-				framesElapsedSinceEndRound = 0;
-				playerOne = 0;
-				playerTwo = 0;
-				Game.setState(GAME_PLAY);
-			}
-		},
+  {
+    'handleInputs': () => {
+      if (isPressedAny()) {
+        ball.reset();
+        framesElapsedSinceEndRound = 0;
+        playerOne = 0;
+        playerTwo = 0;
+        Game.setState(GAME_PLAY);
+      }
+    },
 
-		'update': () => {
-			if (framesElapsedSinceEndRound > framesTilNextRound) {
-				Game.handleInputs();
-			};
+    'update': () => {
+      if (framesElapsedSinceEndRound > framesTilNextRound) {
+        Game.handleInputs();
+      };
 
-			framesElapsedSinceEndRound++;
-		},
+      framesElapsedSinceEndRound++;
+    },
 
-		'draw': () => {
-			drawBackground()
+    'draw': () => {
+      drawBackground()
 
-			padOne.draw();
-			padTwo.draw();
-			displayScores(ctx, playerOne, playerTwo);
-			displayWinner(ctx, winnerName);
+      padOne.draw();
+      padTwo.draw();
+      displayScores(ctx, playerOne, playerTwo);
+      displayWinner(ctx, winnerName);
 
-			if (framesElapsedSinceEndRound > framesTilNextRound) {
-				displayRestart(ctx);				
-			}
-		}
-	}
+      if (framesElapsedSinceEndRound > framesTilNextRound) {
+        displayRestart(ctx);        
+      }
+    }
+  }
 );
